@@ -436,13 +436,13 @@ async def on_message(message: discord.Message):
             await message.channel.send(":question: Unknown command. Type `" + commandPrefix + "help` for a list of commands.")
 
     # Non-command messages
-    if not isDM:
+    elif not isDM:
         callingGuild = botState.guildsDB.getGuild(message.guild.id)
         if message.channel.id == callingGuild.storyChannelID:
             if message.author.id == callingGuild.lastAuthorID:
                 await message.channel.send(":boom: **Story broken, " + message.author.mention + "!**")
                 callingGuild.story = ""
-                lastAuthorID = -1
+                callingGuild.lastAuthorID = -1
 
             elif message.content == "" or message.content == "." and callingGuild.story == "":
                 pass
@@ -452,10 +452,10 @@ async def on_message(message: discord.Message):
                 if len(message.content.split(" ")) > 2 or not(firstWord == "..." or len(firstWord) == 1 and firstWord in ".,!?"):
                     await message.channel.send(":boom: **Story broken, " + message.author.mention + "!**")
                     callingGuild.story = ""
-                    lastAuthorID = -1
+                    callingGuild.lastAuthorID = -1
                 else:
                     callingGuild.story += message.content
-                    lastAuthorID = message.author.id
+                    callingGuild.lastAuthorID = message.author.id
 
             elif len(callingGuild.story) + len(message.content) + 1 > 2000:
                 await message.channel.send(":boom: **Max story length exceeded!**")
@@ -464,15 +464,15 @@ async def on_message(message: discord.Message):
                 await message.channel.send("**Story complete!**")
                 await message.channel.send(callingGuild.story + ("" if callingGuild.story[-1] in ".,!?" else "."))
                 callingGuild.story = ""
-                lastAuthorID = -1
+                callingGuild.lastAuthorID = -1
 
             elif message.content[0] in ",!?":
                 callingGuild.story += message.content
-                lastAuthorID = message.author.id
+                callingGuild.lastAuthorID = message.author.id
             
             else:
                 callingGuild.story += " " + message.content
-                lastAuthorID = message.author.id
+                callingGuild.lastAuthorID = message.author.id
 
 
 @botState.client.event
