@@ -18,6 +18,7 @@ class BasedUser(serializable.Serializable):
         """
         self.id = id
         self.helpMenuOwned = False
+        self.pollOwned = False
 
 
     def resetUser(self):
