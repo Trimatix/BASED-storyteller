@@ -41,7 +41,7 @@ class BasedGuild(serializable.Serializable):
         :return: A dictionary containing all information needed to reconstruct this BasedGuild
         :rtype: dict
         """
-        return {"commandPrefix" : self.commandPrefix, "currentStory": self.story, "lastAuthorID" : self.lastAuthorID}
+        return {"commandPrefix" : self.commandPrefix, "currentStory": self.story, "lastAuthorID" : self.lastAuthorID, "storyChannelID": self.storyChannelID}
 
 
     @classmethod
