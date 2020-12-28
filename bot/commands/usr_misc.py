@@ -51,9 +51,9 @@ async def cmd_source(message: discord.Message, args: str, isDM: bool):
     srcEmbed.add_field(name="BASED",
                        value="[BASED " + versionInfo.BASED_VERSION + "](https://github.com/Trimatix/BASED)")
     srcEmbed.add_field(name="GitHub",
-                       value="Please ask the bot developer to post their GitHub repository here!")
+                       value="[Trimatix/BASED-storyteller](https://github.com/Trimatix/BASED-storyteller)")
     srcEmbed.add_field(name="Invite",
-                       value="Please ask the bot developer to post the bot's invite link here!")
+                       value="(no public invite)")
     await message.channel.send(embed=srcEmbed)
 
 botCommands.register("source", cmd_source, 0, allowDM=True, signatureStr="**source**", shortHelp="Show links to the project's GitHub page.")
