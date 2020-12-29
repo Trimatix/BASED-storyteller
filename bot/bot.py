@@ -295,7 +295,8 @@ async def on_ready():
     print("BASED " + versionInfo.BASED_VERSION + " loaded.\nClient logged in as {0.user}".format(botState.client))
     await checkForUpdates()
 
-    await botState.client.change_presence(activity=discord.Game("BASED APP"))
+    await botState.client.change_presence(activity=discord.Activity(name="your stories",
+                                                                    type=discord.ActivityType.listening))
     # bot is now logged in
     botState.client.loggedIn = True
 
