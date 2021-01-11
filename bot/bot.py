@@ -486,7 +486,7 @@ def run():
         raise ValueError("You must give exactly one of either cfg.botToken or cfg.botToken_envVarName")
 
     if cfg.botToken_envVarName and cfg.botToken_envVarName not in os.environ:
-        raise KeyError("Bot token environment variable " + cfg.botToken_envVarName + " not set (cfg.botToken_envVarName")
+        raise KeyError("Bot token environment variable " + cfg.botToken_envVarName + " not set")
 
     # Launch the bot!! 🤘🚀
     botState.client.run(cfg.botToken if cfg.botToken else os.environ[cfg.botToken_envVarName])
