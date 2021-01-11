@@ -272,6 +272,10 @@ async def on_ready():
     botState.usersDB = loadUsersDB(cfg.paths.usersDB)
     botState.guildsDB = loadGuildsDB(cfg.paths.guildsDB)
 
+    for guild in botState.client.guilds:
+        if not botState.guildsDB.idExists(guild.id):
+            botState.guildsDB.addID(guild.id)
+
     # Set help embed thumbnails
     for levelSection in botCommands.helpSectionEmbeds:
         for helpSection in levelSection.values():
