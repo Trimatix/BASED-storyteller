@@ -54,3 +54,41 @@ async def admin_cmd_ping(message : discord.Message, args : str, isDM : bool):
 
 botCommands.register("ping", admin_cmd_ping, 2, signatureStr="**ping**",
                                                             shortHelp="Test the bot's response latency in milliseconds.")
+
+
+async def admin_cmd_set_story_channel(message : discord.Message, args : str, isDM : bool):
+    """admin command setting the calling channel as the guild's story channel
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: ignored
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    callingBGuild = botState.guildsDB.getGuild(message.guild.id)
+
+    if callingBGuild.storyChannelID == message.channel.id:
+        await message.channel.send("This is already the story channel!")
+    else:
+        callingBGuild.storyChannelID = message.channel.id
+        await message.channel.send("Story channel set!")
+
+botCommands.register("set-story-channel", admin_cmd_set_story_channel, 2, signatureStr="**set-story-channel**",
+                                                            shortHelp="Set the channel where the command is called as your server's story channel.")
+
+
+async def admin_cmd_del_story_channel(message : discord.Message, args : str, isDM : bool):
+    """admin command removing the guild's story channel
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: ignored
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    callingBGuild = botState.guildsDB.getGuild(message.guild.id)
+
+    if callingBGuild.storyChannelID == -1:
+        await message.channel.send("This server does not have a story channel!")
+    else:
+        callingBGuild.storyChannelID = -1
+        await message.channel.send("Story channel removed!")
+
+botCommands.register("del-story-channel", admin_cmd_del_story_channel, 2, signatureStr="**del-story-channel**",
+                                                            shortHelp="Remove the server's story channel, if one is set.")
