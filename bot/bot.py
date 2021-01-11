@@ -433,7 +433,8 @@ async def on_message(message: discord.Message):
 
         # Command not found, send an error message.
         if not commandFound:
-            await message.channel.send(":question: Unknown command. Type `" + commandPrefix + "help` for a list of commands.")
+            # await message.channel.send(":question: Unknown command. Type `" + commandPrefix + "help` for a list of commands.")
+            await message.add_reaction(cfg.emojis.unknownCommand.sendable)
 
     # Non-command messages
     elif not isDM:
