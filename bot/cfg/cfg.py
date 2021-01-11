@@ -81,7 +81,7 @@ developers = [188618589102669826]
 botToken = "STORYTELLER_BOT_TOKEN"
 botToken_envVarName = ""
 
-ignoredSymbols = ".,!?`%&()[]-+=*|\/<>¬~'\"_\n"
+ignoredSymbols = ".,!?`%&()[]-+=*|\/<>¬~'\"_\n:;"
 
 pollMenuResultsBarLength = 10
 pollMenuDefaultTimeout = {"minutes": 5}
