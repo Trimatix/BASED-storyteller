@@ -150,6 +150,6 @@ async def admin_cmd_current_story(message : discord.Message, args : str, isDM : 
         return
     else:
         if sendDM:
-            await message.add_reaction(cfg.emojis.dmSent.sendable)
+            await message.add_reaction(cfg.defaultEmojis.dmSent.sendable)
 
 botCommands.register("current-story", admin_cmd_current_story, 1, signatureStr="**current-story**", shortHelp="DM you the contents of the current story in this server.")
