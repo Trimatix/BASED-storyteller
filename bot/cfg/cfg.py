@@ -2,6 +2,7 @@ from ..lib.emojis import UninitializedBasedEmoji
 
 # All emojis used by the bot
 defaultEmojis = {
+    "unknownCommand": UninitializedBasedEmoji(785159632200531978),
     "longProcess": UninitializedBasedEmoji("⏳"),
     # When a user message prompts a DM to be sent, this emoji will be added to the message reactions.
     "dmSent": UninitializedBasedEmoji("📬"),
