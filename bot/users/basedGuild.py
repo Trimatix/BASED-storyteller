@@ -62,5 +62,5 @@ class BasedGuild(serializable.Serializable):
             raise lib.exceptions.NoneDCGuildObj("Could not get guild object for id " + str(id))
         
         if "commandPrefix" in guildDict:
-            return BasedGuild(id, dcGuild, commandPrefix=guildDict["commandPrefix"], story=guildDict["story"] if "story" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1)
-        return BasedGuild(id, dcGuild, story=guildDict["story"] if "story" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1)
+            return BasedGuild(id, dcGuild, commandPrefix=guildDict["commandPrefix"], story=guildDict["currentStory"] if "currentStory" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1)
+        return BasedGuild(id, dcGuild, story=guildDict["currentStory"] if "currentStory" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1)
