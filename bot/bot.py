@@ -410,7 +410,7 @@ async def on_message(message : discord.Message):
             
             elif message.content == ".":
                 await message.channel.send("**Story complete!**")
-                await message.channel.send(callingGuild.story + ("" if callingGuild.story[-1] in ".,!?" else "."))
+                await message.channel.send(callingGuild.story + ("" if callingGuild.story[-1] in cfg.ignoredSymbols else "."))
                 callingGuild.story = ""
                 callingGuild.lastAuthorID = -1
 
