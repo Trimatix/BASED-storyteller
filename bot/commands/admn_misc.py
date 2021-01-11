@@ -3,7 +3,11 @@ import discord
 from . import commandsDB as botCommands
 from . import util_help
 from .. import botState
+<<<<<<< HEAD
 import time
+=======
+from ..cfg import cfg
+>>>>>>> 34d4ed6 (add admin_cmd_current_story)
 
 
 async def admin_cmd_admin_help(message : discord.Message, args : str, isDM : bool):
@@ -108,3 +112,43 @@ async def admin_cmd_del_reaction_menu(message : discord.Message, args : str, isD
         await message.channel.send(":x: Unrecognised reaction menu!")
 
 botCommands.register("del-reaction-menu", admin_cmd_del_reaction_menu, 1, signatureStr="**del-reaction-menu <id>**", longHelp="Remove the specified reaction menu. You can also just delete the message, if you have permissions.\nTo get the ID of a reaction menu, enable discord's developer mode, right click on the menu, and click Copy ID.")
+
+
+async def admin_cmd_current_story(message : discord.Message, args : str, isDM : bool):
+    """DM the calling guild's current story.
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: ignored
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    sendChannel = None
+    sendDM = True
+
+    if message.author.dm_channel is None:
+        await message.author.create_dm()
+    sendChannel = message.author.dm_channel
+    
+    if sendChannel == message.channel:
+        sendDM = False
+    elif sendChannel is None:
+        await message.channel.send(":x: I can't DM you, " + message.author.display_name + "! Please enable DMs from users who are not friends.")
+        return
+    
+    callingGuild = botState.guildsDB.getGuild(message.guild.id)
+
+    try:
+        if callingGuild.storyChannelID == -1:
+            await sendChannel.send(":x: This server has no story channel! Set it using `" + callingGuild.commandPrefix + "set-story-channel`.")
+        elif callingGuild.story == "":
+            await sendChannel.send(":x: This server currently has no story!")
+        else:
+            await sendChannel.send(callingGuild.story)
+
+    except discord.Forbidden:
+        await message.channel.send(":x: I can't DM you, " + message.author.display_name + "! Please enable DMs from users who are not friends.")
+        return
+    else:
+        if sendDM:
+            await message.add_reaction(cfg.emojis.dmSent.sendable)
+
+botCommands.register("current-story", admin_cmd_current_story, 1, signatureStr="**current-story**", shortHelp="DM you the contents of the current story in this server.")
