@@ -80,3 +80,6 @@ developers = [188618589102669826]
 # botToken_envVarName contains the name of an environment variable to get your bot token from
 botToken = "STORYTELLER_BOT_TOKEN"
 botToken_envVarName = ""
+
+pollMenuResultsBarLength = 10
+pollMenuDefaultTimeout = {"minutes": 5}
