@@ -92,3 +92,19 @@ async def admin_cmd_del_story_channel(message : discord.Message, args : str, isD
 
 botCommands.register("del-story-channel", admin_cmd_del_story_channel, 2, signatureStr="**del-story-channel**",
                                                             shortHelp="Remove the server's story channel, if one is set.")
+
+
+async def admin_cmd_del_reaction_menu(message : discord.Message, args : str, isDM : bool):
+    """Force the expiry of the specified reaction menu message, regardless of reaction menu type.
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: A string containing the message ID of an active reaction menu.
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    msgID = int(args)
+    if msgID in botState.reactionMenusDB:
+        await botState.reactionMenusDB[msgID].delete()
+    else:
+        await message.channel.send(":x: Unrecognised reaction menu!")
+
+botCommands.register("del-reaction-menu", admin_cmd_del_reaction_menu, 1, signatureStr="**del-reaction-menu <id>**", longHelp="Remove the specified reaction menu. You can also just delete the message, if you have permissions.\nTo get the ID of a reaction menu, enable discord's developer mode, right click on the menu, and click Copy ID.")
