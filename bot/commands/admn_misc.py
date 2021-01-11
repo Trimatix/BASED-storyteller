@@ -3,11 +3,8 @@ import discord
 from . import commandsDB as botCommands
 from . import util_help
 from .. import botState
-<<<<<<< HEAD
 import time
-=======
 from ..cfg import cfg
->>>>>>> 34d4ed6 (add admin_cmd_current_story)
 
 
 async def admin_cmd_admin_help(message : discord.Message, args : str, isDM : bool):
