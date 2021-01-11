@@ -377,7 +377,11 @@ async def on_message(message : discord.Message):
         # Command not found, send an error message.
         if not commandFound:
             # await message.channel.send(":question: Unknown command. Type `" + commandPrefix + "help` for a list of commands.")
-            await message.add_reaction(cfg.emojis.unknownCommand.sendable)
+            try:
+                await message.add_reaction(cfg.emojis.unknownCommand.sendable)
+            except (discord.NotFound, discord.HTTPException, discord.Forbidden) as e:
+                botState.logger.log("main", "on_message", "failed to add reaction for unknown command",
+                    eventType = type(e).__name__, trace = traceback.format_exc())
 
     # Non-command messages
     elif not isDM:
