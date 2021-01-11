@@ -1,3 +1,11 @@
+<p align="center">
+  <a href="https://github.com/Trimatix/BASED-storyteller/actions"
+    ><img
+      src="https://img.shields.io/github/workflow/status/Trimatix/BASED-storyteller/lint-app"
+      alt="GitHub Actions workflow status"
+  /></a>
+</p>
+
 ### Dramatic Speeches.
 ### Emotional Poetry.
 ### Encapsulating Tales.
