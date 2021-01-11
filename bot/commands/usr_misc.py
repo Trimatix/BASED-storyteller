@@ -197,7 +197,7 @@ async def cmd_poll(message : discord.Message, args : str, isDM : bool):
     
     menuMsg = await message.channel.send("‎")
 
-    timeoutDelta = lib.timeUtil.timeDeltaFromDict(cfg.pollMenuDefaultTimeout if timeoutDict == {} else timeoutDict)
+    timeoutDelta = lib.timeUtil.timeDeltaFromDict(cfg.timeouts.pollMenu if timeoutDict == {} else timeoutDict)
     timeoutTT = TimedTask.TimedTask(expiryDelta=timeoutDelta, expiryFunction=ReactionPollMenu.printAndExpirePollResults, expiryFunctionArgs=menuMsg.id)
     botState.reactionMenusTTDB.scheduleTask(timeoutTT)
 
