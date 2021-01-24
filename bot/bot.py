@@ -335,6 +335,11 @@ async def on_ready():
     # Load save data. If the specified files do not exist, an empty database will be created instead.
     botState.usersDB = loadUsersDB(cfg.paths.usersDB)
     botState.guildsDB = loadGuildsDB(cfg.paths.guildsDB)
+
+    for guild in botState.client.guilds:
+        if not botState.guildsDB.idExists(guild.id):
+            botState.guildsDB.addID(guild.id)
+
     botState.reactionMenusDB = await loadReactionMenusDB(cfg.paths.reactionMenusDB)
 
     # Set help embed thumbnails
