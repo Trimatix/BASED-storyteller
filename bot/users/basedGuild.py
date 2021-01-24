@@ -16,7 +16,7 @@ class BasedGuild(serializable.Serializable):
     :vartype dcGuild: discord.Guild
     """
 
-    def __init__(self, id: int, dcGuild: Guild, commandPrefix: str = cfg.defaultCommandPrefix):
+    def __init__(self, id : int, dcGuild: Guild, commandPrefix : str = cfg.defaultCommandPrefix, story : str = "", lastAuthorID : int = -1, storyChannelID : int = -1):
         """
         :param int id: The ID of the guild, directly corresponding to a discord guild's ID.
         :param discord.Guild guild: This guild's corresponding discord.Guild object
@@ -31,6 +31,9 @@ class BasedGuild(serializable.Serializable):
         if not commandPrefix:
             raise ValueError("Empty command prefix provided")
         self.commandPrefix = commandPrefix
+        self.story = story
+        self.lastAuthorID = lastAuthorID
+        self.storyChannelID = storyChannelID
 
 
     def toDict(self, **kwargs) -> dict:
@@ -39,7 +42,7 @@ class BasedGuild(serializable.Serializable):
         :return: A dictionary containing all information needed to reconstruct this BasedGuild
         :rtype: dict
         """
-        return {"commandPrefix": self.commandPrefix}
+        return {"commandPrefix" : self.commandPrefix, "currentStory": self.story, "lastAuthorID" : self.lastAuthorID}
 
 
     @classmethod
@@ -61,5 +64,5 @@ class BasedGuild(serializable.Serializable):
             raise lib.exceptions.NoneDCGuildObj("Could not get guild object for id " + str(guildID))
 
         if "commandPrefix" in guildDict:
-            return BasedGuild(guildID, dcGuild, commandPrefix=guildDict["commandPrefix"])
-        return BasedGuild(guildID, dcGuild)
+            return BasedGuild(id, dcGuild, commandPrefix=guildDict["commandPrefix"], story=guildDict["story"] if "story" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1)
+        return BasedGuild(id, dcGuild, story=guildDict["story"] if "story" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1)
