@@ -30,7 +30,8 @@ timeouts = {
     "helpMenu": {"minutes": 3},
     "BASED_updateCheckFrequency": {"days": 1},
     # The time to wait inbetween database autosaves.
-    "dataSaveFrequency": {"hours": 1}
+    "dataSaveFrequency": {"hours": 1},
+    "pollMenu": {"minutes": 5}
 }
 
 paths = {
@@ -84,4 +85,3 @@ botToken_envVarName = "STORYTELLER_BOT_TOKEN"
 ignoredSymbols = ".,!?`%&()[]-+=*|\/<>¬~'\"_\n:;"
 
 pollMenuResultsBarLength = 10
-pollMenuDefaultTimeout = {"minutes": 5}
