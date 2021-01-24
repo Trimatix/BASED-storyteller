@@ -7,8 +7,8 @@ from . import commandsDB as botCommands
 from . import util_help
 from .. import lib
 from ..cfg import versionInfo, cfg
-from ..scheduling import TimedTask
-from ..reactionMenus import ReactionPollMenu, ReactionMenu
+from ..scheduling import timedTask
+from ..reactionMenus import reactionPollMenu, reactionMenu
 
 
 async def cmd_help(message: discord.Message, args: str, isDM: bool):
@@ -141,7 +141,7 @@ async def cmd_poll(message : discord.Message, args : str, isDM : bool):
                 await message.channel.send(":x: Cannot use the same emoji for two options!")
                 return
 
-            pollOptions[dumbReact] = ReactionMenu.DummyReactionMenuOption(optionName, dumbReact)
+            pollOptions[dumbReact] = reactionMenu.DummyReactionMenuOption(optionName, dumbReact)
 
     if len(pollOptions) == 0:
         await message.channel.send(":x: No options given!")
@@ -203,10 +203,10 @@ async def cmd_poll(message : discord.Message, args : str, isDM : bool):
     menuMsg = await message.channel.send("‎")
 
     timeoutDelta = lib.timeUtil.timeDeltaFromDict(cfg.timeouts.pollMenu if timeoutDict == {} else timeoutDict)
-    timeoutTT = TimedTask.TimedTask(expiryDelta=timeoutDelta, expiryFunction=ReactionPollMenu.printAndExpirePollResults, expiryFunctionArgs=menuMsg.id)
+    timeoutTT = timedTask.TimedTask(expiryDelta=timeoutDelta, expiryFunction=reactionPollMenu.printAndExpirePollResults, expiryFunctionArgs=menuMsg.id)
     botState.reactionMenusTTDB.scheduleTask(timeoutTT)
 
-    menu = ReactionPollMenu.ReactionPollMenu(menuMsg, pollOptions, timeoutTT, pollStarter=message.author, multipleChoice=multipleChoice, targetRole=targetRole, targetMember=targetMember, owningBasedUser=botState.usersDB.getUser(message.author.id), desc=pollSubject)
+    menu = reactionPollMenu.ReactionPollMenu(menuMsg, pollOptions, timeoutTT, pollStarter=message.author, multipleChoice=multipleChoice, targetRole=targetRole, targetMember=targetMember, owningBasedUser=botState.usersDB.getUser(message.author.id), desc=pollSubject)
     await menu.updateMessage()
     botState.reactionMenusDB[menuMsg.id] = menu
     botState.usersDB.getUser(message.author.id).pollOwned = True

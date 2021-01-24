@@ -1,10 +1,10 @@
 from __future__ import annotations
-from . import ReactionMenu
+from . import reactionMenu
 from ..cfg import cfg
 from .. import botState, lib
 from discord import Colour, Emoji, PartialEmoji, Message, Embed, User, Member, Role
 from datetime import datetime
-from ..scheduling import TimedTask
+from ..scheduling import timedTask
 from typing import Dict, Union, TYPE_CHECKING
 from ..users import basedUser
 
@@ -97,7 +97,7 @@ async def printAndExpirePollResults(msgID : int):
         await reaction.remove(menuMsg.guild.me)
     
 
-class ReactionPollMenu(ReactionMenu.ReactionMenu):
+class ReactionPollMenu(reactionMenu.ReactionMenu):
     """A saveable reaction menu taking a vote from its participants on a selection of option strings.
     On menu expiry, the menu's TimedTask should call printAndExpirePollResults. This edits to menu embed to provide a summary and bar chart of the votes submitted to the poll.
     The poll options have no functionality, all vote counting takes place after menu expiry.
@@ -108,7 +108,7 @@ class ReactionPollMenu(ReactionMenu.ReactionMenu):
     :var owningBasedUser: The bbUser who started the poll
     :vartype owningBasedUser: bbUser
     """
-    def __init__(self, msg : Message, pollOptions : dict, timeout : TimedTask.TimedTask, pollStarter : Union[User, Member] = None,
+    def __init__(self, msg : Message, pollOptions : dict, timeout : timedTask.TimedTask, pollStarter : Union[User, Member] = None,
             multipleChoice : bool = False, titleTxt : str = "", desc : str = "", col : Colour = Colour.blue(), footerTxt : str = "",
             img : str = "", thumb : str = "", icon : str = "", authorName : str = "", targetMember : Member = None,
             targetRole : Role = None, owningBasedUser : basedUser.BasedUser = None):
@@ -198,12 +198,12 @@ class ReactionPollMenu(ReactionMenu.ReactionMenu):
         options = {}
         for emojiName in rmDict["options"]:
             emoji = lib.emojis.BasedEmoji.fromStr(emojiName, rejectInvalid=True)
-            options[emoji] = ReactionMenu.DummyReactionMenuOption(rmDict["options"][emojiName], emoji)
+            options[emoji] = reactionMenu.DummyReactionMenuOption(rmDict["options"][emojiName], emoji)
 
         timeoutTT = None
         if "timeout" in rmDict:
             expiryTime = datetime.utcfromtimestamp(rmDict["timeout"])
-            botState.reactionMenusTTDB.scheduleTask(TimedTask.TimedTask(expiryTime=expiryTime, expiryFunction=printAndExpirePollResults, expiryFunctionArgs=msg.id))
+            botState.reactionMenusTTDB.scheduleTask(timedTask.TimedTask(expiryTime=expiryTime, expiryFunction=printAndExpirePollResults, expiryFunctionArgs=msg.id))
 
         return ReactionPollMenu(msg, options, timeoutTT, multipleChoice=rmDict["multipleChoice"] if "multipleChoice" in rmDict else False,
                                     titleTxt=rmDict["titleTxt"] if "titleTxt" in rmDict else "",
