@@ -78,8 +78,8 @@ developers = [188618589102669826]
 # Exactly one of botToken or botToken_envVarName must be given.
 # botToken contains a string of your bot token
 # botToken_envVarName contains the name of an environment variable to get your bot token from
-botToken = "STORYTELLER_BOT_TOKEN"
-botToken_envVarName = ""
+botToken = ""
+botToken_envVarName = "STORYTELLER_BOT_TOKEN"
 
 ignoredSymbols = ".,!?`%&()[]-+=*|\/<>¬~'\"_\n:;"
 
