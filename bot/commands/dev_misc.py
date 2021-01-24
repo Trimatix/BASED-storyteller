@@ -95,131 +95,19 @@ async def dev_cmd_broadcast(message : discord.Message, args : str, isDM : bool):
     :param str args: string containing the message to broadcast
     :param bool isDM: Whether or not the command is being called from a DM channel
     """
-    if args == "":
-        await message.channel.send("provide a message!")
+    msgArgs = lib.discordUtil.messageArgsFromStr(args)
+
+    skippedGuilds = []
+    for guild in botState.guildsDB.getGuilds():
+        if guild.storyChannelID != -1:
+            try:
+                await guild.dcGuild.get_channel(guild.storyChannelID).send(**msgArgs)
+            except (discord.Forbidden, discord.HTTPException, discord.NotFound):
+                skippedGuilds.append(guild.id)
+    if skippedGuilds != []:
+        await message.channel.send("skipped guilds: " + ", ".join(str(id) for id in skippedGuilds))
     else:
-        broadcastEmbed = None
-        msg = args
-
-        try:
-            embedIndex = msg.index("embed=")
-        except ValueError:
-            embedIndex = -1
-
-        if embedIndex != -1:
-            msgText = msg[:embedIndex]
-        else:
-            msgText = msg
-
-        if embedIndex != -1:
-            msg = msg[embedIndex+len("embed="):]
-            titleTxt = ""
-            desc = ""
-            footerTxt = ""
-            thumb = ""
-            img = ""
-            authorName = ""
-            icon = ""
-
-            try:
-                startIndex = msg.index("titleTxt='")+len("titleTxt=")+1
-                endIndex = startIndex + \
-                    msg[msg.index("titleTxt='")+len("titleTxt='"):].index("'")
-                titleTxt = msg[startIndex:endIndex]
-                msg = msg[endIndex+2:]
-            except ValueError:
-                pass
-
-            try:
-                startIndex = msg.index("desc='")+len("desc=")+1
-                endIndex = startIndex + \
-                    msg[msg.index("desc='")+len("desc='"):].index("'")
-                desc = msg[startIndex:endIndex].replace("{NL}", "\n")
-                msg = msg[endIndex+2:]
-            except ValueError:
-                pass
-
-            try:
-                startIndex = msg.index("footerTxt='")+len("footerTxt=")+1
-                endIndex = startIndex + \
-                    msg[msg.index("footerTxt='") +
-                        len("footerTxt='"):].index("'")
-                footerTxt = msg[startIndex:endIndex]
-                msg = msg[endIndex+2:]
-            except ValueError:
-                pass
-
-            try:
-                startIndex = msg.index("thumb='")+len("thumb=")+1
-                endIndex = startIndex + \
-                    msg[msg.index("thumb='")+len("thumb='"):].index("'")
-                thumb = msg[startIndex:endIndex]
-                msg = msg[endIndex+2:]
-            except ValueError:
-                pass
-
-            try:
-                startIndex = msg.index("img='")+len("img=")+1
-                endIndex = startIndex + \
-                    msg[msg.index("img='")+len("img='"):].index("'")
-                img = msg[startIndex:endIndex]
-                msg = msg[endIndex+2:]
-            except ValueError:
-                pass
-
-            try:
-                startIndex = msg.index("authorName='")+len("authorName=")+1
-                endIndex = startIndex + \
-                    msg[msg.index("authorName='") +
-                        len("authorName='"):].index("'")
-                authorName = msg[startIndex:endIndex]
-                msg = msg[endIndex+2:]
-            except ValueError:
-                pass
-
-            try:
-                startIndex = msg.index("icon='")+len("icon=")+1
-                endIndex = startIndex + \
-                    msg[msg.index("icon='")+len("icon='"):].index("'")
-                icon = msg[startIndex:endIndex]
-                msg = msg[endIndex+2:]
-            except ValueError:
-                pass
-
-            broadcastEmbed = lib.discordUtil.makeEmbed(titleTxt=titleTxt, desc=desc, footerTxt=footerTxt,
-                                       thumb=thumb, img=img, authorName=authorName, icon=icon)
-
-            try:
-                msg.index('\n')
-                fieldsExist = True
-            except ValueError:
-                fieldsExist = False
-            while fieldsExist:
-                nextNL = msg.index('\n')
-                try:
-                    closingNL = nextNL + msg[nextNL+1:].index('\n')
-                except ValueError:
-                    fieldsExist = False
-                else:
-                    broadcastEmbed.add_field(name=msg[:nextNL].replace(
-                        "{NL}", "\n"), value=msg[nextNL+1:closingNL+1].replace("{NL}", "\n"), inline=False)
-                    msg = msg[closingNL+2:]
-                
-                if not fieldsExist:
-                    broadcastEmbed.add_field(name=msg[:nextNL].replace(
-                        "{NL}", "\n"), value=msg[nextNL+1:].replace("{NL}", "\n"), inline=False)
-
-        skippedGuilds = []
-        for guild in botState.guildsDB.getGuilds():
-            if guild.storyChannelID != -1:
-                try:
-                    await guild.dcGuild.get_channel(guild.storyChannelID).send(msgText, embed=broadcastEmbed)
-                except (discord.Forbidden, discord.HTTPException, discord.NotFound):
-                    skippedGuilds.append(guild.id)
-        if skippedGuilds != []:
-            await message.channel.send("skipped guilds: " + ", ".join(str(id) for id in skippedGuilds))
-        else:
-            await message.channel.send("broadcast sent to all guilds")
+        await message.channel.send("broadcast sent to all guilds")
 
 botCommands.register("broadcast", dev_cmd_broadcast, 3, forceKeepArgsCasing=True, allowDM=True, useDoc=True)
 
