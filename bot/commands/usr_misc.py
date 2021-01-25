@@ -2,6 +2,7 @@ from bot import botState
 from bot.cfg import versionInfo
 import discord
 from datetime import datetime
+import random
 
 from . import commandsDB as botCommands
 from . import util_help
@@ -9,6 +10,10 @@ from .. import lib
 from ..cfg import versionInfo, cfg
 from ..scheduling import timedTask
 from ..reactionMenus import reactionPollMenu, reactionMenu
+
+from random_word import RandomWords
+wordPicker = RandomWords()
+
 
 
 async def cmd_help(message: discord.Message, args: str, isDM: bool):
@@ -212,3 +217,54 @@ async def cmd_poll(message : discord.Message, args : str, isDM : bool):
     botState.usersDB.getUser(message.author.id).pollOwned = True
 
 botCommands.register("poll", cmd_poll, 0, forceKeepArgsCasing=True, allowDM=False, signatureStr="**poll** *<subject>*\n**<option1 emoji> <option1 name>**\n...    ...\n*[kwargs]*", shortHelp="Start a reaction-based poll. Each option must be on its own new line, as an emoji, followed by a space, followed by the option name.", longHelp="Start a reaction-based poll. Each option must be on its own new line, as an emoji, followed by a space, followed by the option name. The `subject` is the question that users answer in the poll and is optional, to exclude your subject simply give a new line.\n\n__Optional Arguments__\nOptional arguments should be given by `name=value`, with each arg on a new line.\n- Give `multiplechoice=no` to only allow one vote per person (default: yes).\n- Give `target=@role mention` to limit poll participants only to users with the specified role.\n- You may specify the length of the poll, with each time division on a new line. Acceptable time divisions are: `seconds`, `minutes`, `hours`, `days`. (default: minutes=5)")
+
+
+async def cmd_prompt(message: discord.Message, args: str, isDM: bool):
+    """Get a randomly generated prompt to inspire your next story.
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: ignored
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    subjectUseMember = random.randint(0, 100)
+    if subjectUseMember < cfg.promptSubjectUseMemberChance:
+        if len(message.guild.members) > 0:
+            subject1 = str(random.choice(message.guild.members))
+        else:
+            subject1 = str(message.author)
+    else:
+        subject1 = random.choice(cfg.promptPeople)
+
+    subjectUseMember = random.randint(0, 100)
+    if subjectUseMember < cfg.promptSubjectUseMemberChance:
+        if len(message.guild.members) > 0:
+            subject2 = str(random.choice(message.guild.members))
+        else:
+            subject2 = str(message.author)
+    else:
+        subject2 = random.choice(cfg.promptPeople)
+
+    interaction = random.choice(cfg.promptInteractions)
+    action = random.choice(cfg.promptActions)
+    location = random.choice(cfg.promptLocations)
+    
+    await message.channel.send("*Story Prompt*\n> *" + subject1 + "* " + interaction + " *" + subject2 + "* " + action + " in " + location + ".")
+
+botCommands.register("prompt", cmd_prompt, 0, allowDM=False, signatureStr="**prompt**", shortHelp="Get a randomly generated prompt to inspire your next story.")
+
+
+async def cmd_random(message: discord.Message, args: str, isDM: bool):
+    """Have the bot choose a random word to contribute to the story in place of your turn.
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: ignored
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    if not args or args not in cfg.randomWordTypes:
+        await message.channel.send(":x: Please give a word type: " + "/".join(cfg.randomWordTypes))
+        return
+
+    await message.channel.send(wordPicker.get_random_word(hasDictionaryDef="true", includePartOfSpeech=args))
+    
+
+botCommands.register("random", cmd_random, 0, allowDM=False, signatureStr="**random [word-type]**", shortHelp="Have the bot choose a random word to contribute to the story in place of your turn.\n`word-type` must be either `noun` or `verb`.") 

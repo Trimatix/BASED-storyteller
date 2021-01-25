@@ -133,6 +133,7 @@ class GuildDB(serializable.Serializable):
         for guild in self.getGuilds():
             # Serialise and then store each guild
             # JSON stores properties as strings, so ids must be converted to str first.
+            print("GUILDID",guild.id)
             data[str(guild.id)] = guild.toDict(**kwargs)
         return data
 

@@ -85,3 +85,29 @@ botToken_envVarName = "STORYTELLER_BOT_TOKEN"
 ignoredSymbols = ".,!?`%&()[]-+=*|\/<>¬~'\"_\n:;"
 
 pollMenuResultsBarLength = 10
+
+promptLocations = ["Sydney", "York", "Pisa", "Mumbai", "Santiago", "the street", "a gloomy alley", "a forest",
+                    "the Austrian alps", "Indonesia", "Luxembourg", "Palestine", "WHSmiths", "the basement",
+                    "TikTok", "CS:GO", "the kitchen", "the classroom", "homework club", "the fridge", "the bank",
+                    "a paintball range", "the pantry of 4-star restaurant, Gusteau's", "a swamp", "a gallery",
+                    "a musem", "a night club", "a bar", "the gym", "a lecture hall", "fragsoc", "LAN", "bikini bottom"]
+
+promptActions = ["taking selfies", "singing", "drawing", "writing", "stealing", "shitposting", "flexing", "sitting",
+                    "walking", "strolling", "sleeping", "alone", "swimming", "gaming", "coding", "on their phone",
+                    "browsing deviantart", "on reddit", "studying", "listening to a podcast", "having bowel trouble",
+                    "on holiday for the weekend", "acting out fantasies", "fishing"]
+
+promptPeople = ["Donald Trump", "Nicola Sturgeon", "Nicolas Cage", "Steve Carell", "Natalie Portman", "Pope John Paul II",
+                "Charles Darwin", "David Beckham", "Steven Spielberg", "Dick Wolf", "Karl Marx", "Katy Perry", "Beyoncé",
+                "Jim Carrey", "Taylor Swift", "Kobe Bryant", "Jesus", "Maya Angelou", "the Buddha", "Stephen Hawking",
+                "LeBron James", "Ray Romano", "Toby Keith", "Queen Latifah", "Edgar Allan Poe", "William Wallace",
+                "Frank Zappa", "Jay-Z", "Clint Eastwood", "Stuart Little", "Elmer Fudd", "Barney Rubble", "Herbert Garrison",
+                "Randy Marsh", "Stewie", "Moe Szyslak", "Foghorn Leghorn", "Arthur", "Shaggy", "Wile E. Coyote",
+                "C. Montgomery Burns", "Aladdin", "Ant from Ant and Dec", "Dec from Ant and Dec",
+                "Pinky from Pinky and The Brain", "the brain from Pinky and The Brain", "Justin Fletcher"]
+
+promptInteractions = ["found", "ran into", "and", "preventing"]
+
+promptSubjectUseMemberChance = 70
+
+randomWordTypes = ["noun", "verb"]
