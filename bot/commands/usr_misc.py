@@ -260,11 +260,28 @@ async def cmd_random(message: discord.Message, args: str, isDM: bool):
     :param str args: ignored
     :param bool isDM: Whether or not the command is being called from a DM channel
     """
+
+    await message.channel.send(":x: This command is not currently functional - I'm waiting on an API key request.")
+    return
+
     if not args or args not in cfg.randomWordTypes:
         await message.channel.send(":x: Please give a word type: " + "/".join(cfg.randomWordTypes))
         return
 
-    await message.channel.send(wordPicker.get_random_word(hasDictionaryDef="true", includePartOfSpeech=args))
+    callingGuild = botState.guildsDB.getGuild(message.guild.id)
+    if callingGuild.storyChannelID == -1:
+        await message.channel.send(":x: This server does not have a story channel!")
+    elif callingGuild.storyChannelID != message.channel.id:
+        await message.channel.send(":x: This command can only be used from the story channel!")
+    elif callingGuild.lastAuthorID == message.author.id:
+        await message.channel.send(":boom: **Story broken, " + message.author.mention + "!**")
+        callingGuild.story = ""
+        callingGuild.lastAuthorID = -1
+    else:
+        callingGuild.lastAuthorID = message.author.id
+        newWord = wordPicker.get_random_word(hasDictionaryDef="true", includePartOfSpeech=args)
+        callingGuild.story += " " + newWord
+        await message.reply(newWord)
     
 
 botCommands.register("random", cmd_random, 0, allowDM=False, signatureStr="**random [word-type]**", shortHelp="Have the bot choose a random word to contribute to the story in place of your turn.\n`word-type` must be either `noun` or `verb`.") 
