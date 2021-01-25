@@ -249,7 +249,7 @@ class BasedEmoji(serializable.Serializable):
         elif stringTyping.isInt(s):
             return BasedEmoji(id=int(s), rejectInvalid=rejectInvalid)
         else:
-            raise TypeError("Expected s of type str, dict or BasedEmoji, got " + type(s).__name__)
+            raise TypeError("Expected s of type str, dict or BasedEmoji, got " + type(s).__name__ + ": " + str(s))
 
 
     @classmethod
