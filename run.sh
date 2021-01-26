@@ -1,17 +1,17 @@
 #!/bin/bash
 runbot="python3 main.py"
-usebash=false
+usegit=false
 
 if [ "$#" -gt  0 ]; then
-    if [ "$1" -eq "-g"]; then
-        usebash=true
+    if [ "$1" -eq "-g" ]; then
+        usegit=true
     else
         runbot='python3 main.py "$1"'
     fi
 
     if [ "$#" -gt  1 ]; then
-        if [ "$2" -eq "-g"]; then
-            usebash=true
+        if [ "$2" -eq "-g" ]; then
+            usegit=true
         else
             runbot='python3 main.py "$2"'
         fi
@@ -21,7 +21,7 @@ fi
 eval "$runbot"
 
 while [ $? -ne 1 ]; do
-    if [ $usebash = true ] && [ $? -eq 2 ]; then
+    if [ $usegit = true ] && [ $? -eq 2 ]; then
         git pull --no-commit --no-ff
         if [ $? -ne 0 ]; then
             echo "conflict occurred, aborting"
