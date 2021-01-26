@@ -20,7 +20,7 @@ if [ "$#" -gt  0 ]; then
     fi
 fi
 
-eval "$runbot"
+$runbot
 
 while [ "$?" -ne 1 ]; do
     echo "status code $?"
@@ -34,5 +34,5 @@ while [ "$?" -ne 1 ]; do
             git commit
         fi
     fi
-    eval "$runbot"
+    $runbot
 done
