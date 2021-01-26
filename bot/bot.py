@@ -567,5 +567,4 @@ def run():
 
     # Launch the bot!! 🤘🚀
     botState.client.run(cfg.botToken if cfg.botToken else os.environ[cfg.botToken_envVarName])
-    print("returning status code " + str(botState.shutdown))
     return botState.shutdown
