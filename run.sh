@@ -3,14 +3,14 @@ runbot="python3 main.py"
 usegit=false
 
 if [ "$#" -gt  0 ]; then
-    if [ "$1" -eq "-g" ]; then
+    if [ "$1" = "-g" ]; then
         usegit=true
     else
         runbot='python3 main.py "$1"'
     fi
 
     if [ "$#" -gt  1 ]; then
-        if [ "$2" -eq "-g" ]; then
+        if [ "$2" = "-g" ]; then
             usegit=true
         else
             runbot='python3 main.py "$2"'
