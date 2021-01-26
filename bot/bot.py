@@ -321,7 +321,7 @@ async def on_ready():
     TODO: Implement dynamic timedtask checking period
     """
     botState.httpClient = aiohttp.ClientSession()
-    print("loading")
+    print("loading bot")
 
     ##### EMOJI INITIALIZATION #####
 
