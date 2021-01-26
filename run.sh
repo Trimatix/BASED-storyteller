@@ -20,7 +20,7 @@ fi
 
 eval "$runbot"
 
-while [ $? -ne 1 ] do
+while [ $? -ne 1 ]; do
     if [ $usebash = true ] && [ $? -eq 2 ]; then
         git pull --no-commit --no-ff
         if [ $? -ne 0 ]; then
