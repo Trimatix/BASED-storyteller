@@ -367,7 +367,8 @@ async def on_ready():
     while botState.client.loggedIn:
         if cfg.timedTaskCheckingType == "fixed":
             await asyncio.sleep(cfg.timedTaskLatenessThresholdSeconds)
-        # elif cfg.timedTaskCheckingType == "dynamic":
+        elif cfg.timedTaskCheckingType == "dynamic":
+            pass
 
         await botState.dbSaveTT.doExpiryCheck()
         await botState.reactionMenusTTDB.doTaskChecking()
