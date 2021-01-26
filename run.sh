@@ -4,6 +4,7 @@ usegit=false
 
 if [ "$#" -gt  0 ]; then
     if [ "$1" = "-g" ]; then
+        echo "git mode enabled"
         usegit=true
     else
         runbot='python3 main.py "$1"'
@@ -11,6 +12,7 @@ if [ "$#" -gt  0 ]; then
 
     if [ "$#" -gt  1 ]; then
         if [ "$2" = "-g" ]; then
+            echo "git mode enabled"
             usegit=true
         else
             runbot='python3 main.py "$2"'
