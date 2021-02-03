@@ -4,6 +4,7 @@ from datetime import datetime
 
 from . import commandsDB as botCommands
 from .. import botState, lib
+from ..cfg import cfg
 
 from . import util_help
 
@@ -124,3 +125,22 @@ async def dev_cmd_bot_update(message : discord.Message, args : str, isDM : bool)
     await botState.client.shutdown()
 
 botCommands.register("bot-update", dev_cmd_bot_update, 3, allowDM=True, useDoc=True)
+
+
+async def dev_cmd_reset_prefix(message : discord.Message, args : str, isDM : bool):
+    """developer command that forcefully resets the command prefix of the server with the given id.
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: ignored
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    if not args or not lib.stringTyping.isInt(args):
+        await message.channel.send(":x: Give a guild ID!")
+    elif not botState.guildsDB.idExists(int(args)):
+        await message.channel.send(":x: Unknown guild.")
+    else:
+        g = botState.guildsDB.getGuild(int(args))
+        g.commandPrefix = cfg.defaultCommandPrefix
+        await message.channel.send(":white_check_mark: Guild " + g.dcGuild.name + "'s command prefix has been reset to " + cfg.defaultCommandPrefix)
+
+botCommands.register("reset_prefix", dev_cmd_reset_prefix, 3, allowDM=True, useDoc=True)
