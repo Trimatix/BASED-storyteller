@@ -261,9 +261,6 @@ async def cmd_random(message: discord.Message, args: str, isDM: bool):
     :param bool isDM: Whether or not the command is being called from a DM channel
     """
 
-    await message.channel.send(":x: This command is not currently functional - I'm waiting on an API key request.")
-    return
-
     if not args or args not in cfg.randomWordTypes:
         await message.channel.send(":x: Please give a word type: " + "/".join(cfg.randomWordTypes))
         return
@@ -279,7 +276,12 @@ async def cmd_random(message: discord.Message, args: str, isDM: bool):
         callingGuild.lastAuthorID = -1
     else:
         callingGuild.lastAuthorID = message.author.id
-        newWord = wordPicker.get_random_word(hasDictionaryDef="true", includePartOfSpeech=args)
+        excludes = "adjective, adverb, interjection, pronoun, preposition, abbreviation, affix, article, auxiliary-verb, conjunction, definite-article, family-name, given-name, idiom, imperative, noun-plural, noun-posessive, past-participle, phrasal-prefix, proper-noun, proper-noun-plural, proper-noun-posessive, suffix, verb-intransitive, verb-transitive"
+        if args == "noun":
+            excludes += ", verb"
+        else:
+            excludes += ", noun"
+        newWord = wordPicker.get_random_word(includePartOfSpeech=args, excludePartOfSpeech=excludes)#hasDictionaryDef="true", 
         callingGuild.story += " " + newWord
         await message.reply(newWord)
     
