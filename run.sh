@@ -1,29 +1,32 @@
 #!/bin/bash
 runbot="python3 main.py"
-usebash=false
+usegit=false
 
 if [ "$#" -gt  0 ]; then
-    if [ "$1" -eq "-g"]; then
-        usebash=true
+    if [ "$1" = "-g" ]; then
+        echo "git mode enabled"
+        usegit=true
     else
         runbot='python3 main.py "$1"'
     fi
 
     if [ "$#" -gt  1 ]; then
-        if [ "$2" -eq "-g"]; then
-            usebash=true
+        if [ "$2" = "-g" ]; then
+            echo "git mode enabled"
+            usegit=true
         else
             runbot='python3 main.py "$2"'
         fi
     fi
 fi
 
-eval "$runbot"
+$runbot
 
-while [ $? -ne 1 ] do
-    if [ $usebash = true ] && [ $? -eq 2 ]; then
+while [ "$?" -ne 1 ]; do
+    echo "status code $?"
+    if [ "$usegit" = true ] && [ "$?" -eq 2 ]; then
         git pull --no-commit --no-ff
-        if [ $? -ne 0 ]; then
+        if [ "$?" -ne 0 ]; then
             echo "conflict occurred, aborting"
             git merge --abort
         else
@@ -31,5 +34,5 @@ while [ $? -ne 1 ] do
             git commit
         fi
     fi
-    eval "$runbot"
+    $runbot
 done

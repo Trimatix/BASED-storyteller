@@ -367,7 +367,8 @@ async def on_ready():
     while botState.client.loggedIn:
         if cfg.timedTaskCheckingType == "fixed":
             await asyncio.sleep(cfg.timedTaskLatenessThresholdSeconds)
-        # elif cfg.timedTaskCheckingType == "dynamic":
+        elif cfg.timedTaskCheckingType == "dynamic":
+            pass
 
         await botState.dbSaveTT.doExpiryCheck()
         await botState.reactionMenusTTDB.doTaskChecking()
@@ -459,7 +460,7 @@ async def on_message(message: discord.Message):
 
             elif " " in message.content:
                 firstWord = message.content.split(" ")[0]
-                if len(message.content.split(" ")) > 2 or not(firstWord == "..." or len(firstWord) == 1 and firstWord in ".,!?"):
+                if len(message.content.split(" ")) > 2 or not(firstWord == "..." or len(firstWord) == 1 and firstWord in cfg.ignoredSymbols):
                     await message.channel.send(":boom: **Story broken, " + message.author.mention + "!**")
                     callingGuild.story = ""
                     callingGuild.lastAuthorID = -1
