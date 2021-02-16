@@ -455,35 +455,68 @@ async def on_message(message: discord.Message):
                 callingGuild.story = ""
                 callingGuild.lastAuthorID = -1
 
-            elif message.content == "" or message.content == "." and callingGuild.story == "":
-                pass
-
-            elif " " in message.content:
-                firstWord = message.content.split(" ")[0]
-                if len(message.content.split(" ")) > 2 or not(firstWord == "..." or len(firstWord) == 1 and firstWord in cfg.ignoredSymbols):
-                    await message.channel.send(":boom: **Story broken, " + message.author.mention + "!**")
+            if callingGuild.emojiOnly:
+                if message.content == ".":
+                    await message.channel.send("**Story complete!**")
+                    await message.channel.send(callingGuild.story)
                     callingGuild.story = ""
                     callingGuild.lastAuthorID = -1
+                    if callingGuild.emojiOnlyErrSent:
+                        callingGuild.emojiOnlyErrSent = False
+                elif not (lib.emojis.strIsCustomEmoji(message.content) or lib.emojis.strIsUnicodeEmoji(message.content)):
+                    await message.delete()
+                    if not callingGuild.emojiOnlyErrSent:
+                        await message.channel.send(message.author.mention + " emoji only mode is enabled! You can only contribute a single emoji.")
+                        callingGuild.emojiOnlyErrSent = True
                 else:
+                    try:
+                        lib.emojis.BasedEmoji.fromStr(message.content, rejectInvalid=True)
+                    except lib.exceptions.UnrecognisedCustomEmoji:
+                        await message.channel.send(message.author.mention + " please only use standard emojis or emojis from this server!")
+                        return
+                    if callingGuild.emojiOnlyErrSent:
+                        callingGuild.emojiOnlyErrSent = False
+
+                    if len(callingGuild.story) + len(message.content) > 2000:
+                        await message.channel.send(":boom: **Max story length exceeded!**")
+                        callingGuild.story = ""
+                        callingGuild.lastAuthorID = -1
+                    else:
+                        callingGuild.story += message.content
+                        callingGuild.lastAuthorID = message.author.id
+                    
+            else:
+                if message.content == "" or message.content == "." and callingGuild.story == "":
+                    pass
+
+                elif " " in message.content:
+                    firstWord = message.content.split(" ")[0]
+                    if len(message.content.split(" ")) > 2 or not(firstWord == "..." or len(firstWord) == 1 and firstWord in cfg.ignoredSymbols):
+                        await message.channel.send(":boom: **Story broken, " + message.author.mention + "!**")
+                        callingGuild.story = ""
+                        callingGuild.lastAuthorID = -1
+                    else:
+                        callingGuild.story += message.content
+                        callingGuild.lastAuthorID = message.author.id
+
+                elif len(callingGuild.story) + len(message.content) + 1 > 2000:
+                    await message.channel.send(":boom: **Max story length exceeded!**")
+                    callingGuild.story = ""
+                    callingGuild.lastAuthorID = -1
+                
+                elif message.content == ".":
+                    await message.channel.send("**Story complete!**")
+                    await message.channel.send(callingGuild.story + ("" if callingGuild.story[-1] in cfg.ignoredSymbols else "."))
+                    callingGuild.story = ""
+                    callingGuild.lastAuthorID = -1
+
+                elif message.content[0] in ",!?":
                     callingGuild.story += message.content
                     callingGuild.lastAuthorID = message.author.id
-
-            elif len(callingGuild.story) + len(message.content) + 1 > 2000:
-                await message.channel.send(":boom: **Max story length exceeded!**")
-            
-            elif message.content == ".":
-                await message.channel.send("**Story complete!**")
-                await message.channel.send(callingGuild.story + ("" if callingGuild.story[-1] in cfg.ignoredSymbols else "."))
-                callingGuild.story = ""
-                callingGuild.lastAuthorID = -1
-
-            elif message.content[0] in ",!?":
-                callingGuild.story += message.content
-                callingGuild.lastAuthorID = message.author.id
-            
-            else:
-                callingGuild.story += " " + message.content
-                callingGuild.lastAuthorID = message.author.id
+                
+                else:
+                    callingGuild.story += " " + message.content
+                    callingGuild.lastAuthorID = message.author.id
 
 
 @botState.client.event
