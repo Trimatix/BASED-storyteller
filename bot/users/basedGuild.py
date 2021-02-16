@@ -16,7 +16,7 @@ class BasedGuild(serializable.Serializable):
     :vartype dcGuild: discord.Guild
     """
 
-    def __init__(self, id : int, dcGuild: Guild, commandPrefix : str = cfg.defaultCommandPrefix, story : str = "", lastAuthorID : int = -1, storyChannelID : int = -1):
+    def __init__(self, id : int, dcGuild: Guild, commandPrefix : str = cfg.defaultCommandPrefix, story : str = "", lastAuthorID : int = -1, storyChannelID : int = -1, emojiOnly : bool = False):
         """
         :param int id: The ID of the guild, directly corresponding to a discord guild's ID.
         :param discord.Guild guild: This guild's corresponding discord.Guild object
@@ -34,6 +34,8 @@ class BasedGuild(serializable.Serializable):
         self.story = story
         self.lastAuthorID = lastAuthorID
         self.storyChannelID = storyChannelID
+        self.emojiOnly = emojiOnly
+        self.emojiOnlyErrSent = False
 
 
     def toDict(self, **kwargs) -> dict:
@@ -42,7 +44,7 @@ class BasedGuild(serializable.Serializable):
         :return: A dictionary containing all information needed to reconstruct this BasedGuild
         :rtype: dict
         """
-        return {"commandPrefix" : self.commandPrefix, "currentStory": self.story, "lastAuthorID" : self.lastAuthorID, "storyChannelID": self.storyChannelID}
+        return {"commandPrefix" : self.commandPrefix, "currentStory": self.story, "lastAuthorID" : self.lastAuthorID, "storyChannelID": self.storyChannelID, "emojiOnly": self.emojiOnly}
 
 
     @classmethod
@@ -64,5 +66,5 @@ class BasedGuild(serializable.Serializable):
             raise lib.exceptions.NoneDCGuildObj("Could not get guild object for id " + str(guildID))
 
         if "commandPrefix" in guildDict:
-            return BasedGuild(guildID, dcGuild, commandPrefix=guildDict["commandPrefix"], story=guildDict["currentStory"] if "currentStory" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1)
-        return BasedGuild(guildID, dcGuild, story=guildDict["currentStory"] if "currentStory" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1)
+            return BasedGuild(guildID, dcGuild, commandPrefix=guildDict["commandPrefix"], story=guildDict["currentStory"] if "currentStory" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1, emojiOnly=guildDict["emojiOnly"] if "emojiOnly" in guildDict else False)
+        return BasedGuild(guildID, dcGuild, story=guildDict["currentStory"] if "currentStory" in guildDict else "", lastAuthorID=guildDict["lastAuthorID"] if "lastAuthorID" in guildDict else -1, storyChannelID=guildDict["storyChannelID"] if "storyChannelID" in guildDict else -1, emojiOnly=guildDict["emojiOnly"] if "emojiOnly" in guildDict else False)
