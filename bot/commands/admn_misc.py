@@ -153,3 +153,24 @@ async def admin_cmd_current_story(message : discord.Message, args : str, isDM : 
             await message.add_reaction(cfg.defaultEmojis.dmSent.sendable)
 
 botCommands.register("current-story", admin_cmd_current_story, 1, signatureStr="**current-story**", shortHelp="DM you the contents of the current story in this server.")
+
+
+async def admin_cmd_emoji_only(message : discord.Message, args : str, isDM : bool):
+    """admin command toggling emoji-only mode for the calling guild
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: ignored
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    callingBGuild = botState.guildsDB.getGuild(message.guild.id)
+    callingBGuild.emojiOnly = not callingBGuild.emojiOnly
+
+    if callingBGuild.emojiOnly:
+        await message.channel.send("Emoji only mode is now enabled!\nStory contributions can now only consist of a single emoji.")
+    else:
+        await message.channel.send("Emoji only mode is now disabled!\nStory contributions can now only be one word.")
+        if callingBGuild.emojiOnlyErrSent:
+            callingBGuild.emojiOnlyErrSent = False
+
+botCommands.register("emoji-only", admin_cmd_emoji_only, 2, signatureStr="**emoji-only**",
+                                                            shortHelp="Toggle emoji only mode. In this mode, a contribution will only be accepted if it is just one emoji, and nothing else. Not even punctuation!")
