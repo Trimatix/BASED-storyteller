@@ -36,7 +36,7 @@ async def fromDict(dbDict: dict) -> ReactionMenuDB:
 
     for msgID in dbDict:
         dcGuild = botState.client.get_guild(dbDict[msgID]["guild"])
-        msg = await dcGuild.get_channel(dbDict[msgID]["channel"]).fetch_message(dbDict[msgID]["msg"])
+        # msg = await dcGuild.get_channel(dbDict[msgID]["channel"]).fetch_message(dbDict[msgID]["msg"])
 
         if botState.client.get_channel(dbDict[msgID]["channel"]) is None:
             continue
