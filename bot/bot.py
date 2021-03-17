@@ -451,13 +451,21 @@ async def on_message(message: discord.Message):
         callingGuild = botState.guildsDB.getGuild(message.guild.id)
         if message.channel.id == callingGuild.storyChannelID:
             if message.author.id == callingGuild.lastAuthorID:
-                await message.channel.send(":boom: **Story broken, " + message.author.mention + "!**")
+                await message.channel.send(":boom: **Story broken, " + message.author.mention + "!** It wasn't your turn!")
+                await message.channel.send(callingGuild.story)
                 callingGuild.story = ""
                 callingGuild.lastAuthorID = -1
 
             if callingGuild.emojiOnly:
                 if message.content == ".":
                     await message.channel.send("**Story complete!**")
+            elif message.content == "" or message.content == "." and callingGuild.story == "":
+                pass
+
+            elif " " in message.content:
+                firstWord = message.content.split(" ")[0]
+                if len(message.content.split(" ")) > 2 or not(firstWord == "..." or len(firstWord) == 1 and firstWord in cfg.ignoredSymbols):
+                    await message.channel.send(":boom: **Story broken, " + message.author.mention + "!** You only add one " + ("emoji" if callingGuild.emojiOnly else "word") + " at a time!")
                     await message.channel.send(callingGuild.story)
                     callingGuild.story = ""
                     callingGuild.lastAuthorID = -1

@@ -271,7 +271,8 @@ async def cmd_random(message: discord.Message, args: str, isDM: bool):
     elif callingGuild.storyChannelID != message.channel.id:
         await message.channel.send(":x: This command can only be used from the story channel!")
     elif callingGuild.lastAuthorID == message.author.id:
-        await message.channel.send(":boom: **Story broken, " + message.author.mention + "!**")
+        await message.channel.send(":boom: **Story broken, " + message.author.mention + "!** It wasn't your turn!")
+        await message.channel.send(callingGuild.story)
         callingGuild.story = ""
         callingGuild.lastAuthorID = -1
     else:
