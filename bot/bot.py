@@ -477,22 +477,23 @@ async def on_message(message: discord.Message):
                 callingGuild.story = ""
                 callingGuild.lastAuthorID = -1
             else:
-                if callingGuild.emojiOnly and not (lib.emojis.strIsCustomEmoji(message.content) or lib.emojis.strIsUnicodeEmoji(message.content)):
-                    await message.delete()
-                    if not callingGuild.emojiOnlyErrSent:
-                        await message.channel.send(message.author.mention + " emoji only mode is enabled! You can only contribute a single emoji.")
-                        callingGuild.emojiOnlyErrSent = True
-                    return
-                try:
-                    lib.emojis.BasedEmoji.fromStr(message.content, rejectInvalid=True)
-                except (lib.exceptions.UnrecognisedCustomEmoji, TypeError):
-                    await message.delete()
-                    await message.channel.send(message.author.mention + " please only use standard emojis or emojis from this server!")
-                else:
+                if callingGuild.emojiOnly:
+                    if not (lib.emojis.strIsCustomEmoji(message.content) or lib.emojis.strIsUnicodeEmoji(message.content)):
+                        await message.delete()
+                        if not callingGuild.emojiOnlyErrSent:
+                            await message.channel.send(message.author.mention + " emoji only mode is enabled! You can only contribute a single emoji.")
+                            callingGuild.emojiOnlyErrSent = True
+                        return
+                    try:
+                        lib.emojis.BasedEmoji.fromStr(message.content, rejectInvalid=True)
+                    except (lib.exceptions.UnrecognisedCustomEmoji, TypeError):
+                        await message.delete()
+                        await message.channel.send(message.author.mention + " please only use standard emojis or emojis from this server!")
+                        return
                     if callingGuild.emojiOnlyErrSent:
                         callingGuild.emojiOnlyErrSent = False
-                    callingGuild.story += message.content
-                    callingGuild.lastAuthorID = message.author.id
+                callingGuild.story += message.content
+                callingGuild.lastAuthorID = message.author.id
 
 
 @botState.client.event
