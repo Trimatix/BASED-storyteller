@@ -476,12 +476,13 @@ async def on_message(message: discord.Message):
                 await message.channel.send(callingGuild.story)
                 callingGuild.story = ""
                 callingGuild.lastAuthorID = -1
-            elif callingGuild.emojiOnly and not (lib.emojis.strIsCustomEmoji(message.content) or lib.emojis.strIsUnicodeEmoji(message.content)):
-                await message.delete()
-                if not callingGuild.emojiOnlyErrSent:
-                    await message.channel.send(message.author.mention + " emoji only mode is enabled! You can only contribute a single emoji.")
-                    callingGuild.emojiOnlyErrSent = True
             else:
+                if callingGuild.emojiOnly and not (lib.emojis.strIsCustomEmoji(message.content) or lib.emojis.strIsUnicodeEmoji(message.content)):
+                    await message.delete()
+                    if not callingGuild.emojiOnlyErrSent:
+                        await message.channel.send(message.author.mention + " emoji only mode is enabled! You can only contribute a single emoji.")
+                        callingGuild.emojiOnlyErrSent = True
+                    return
                 try:
                     lib.emojis.BasedEmoji.fromStr(message.content, rejectInvalid=True)
                 except (lib.exceptions.UnrecognisedCustomEmoji, TypeError):
