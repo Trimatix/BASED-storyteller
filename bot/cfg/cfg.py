@@ -82,7 +82,8 @@ developers = [188618589102669826]
 botToken = ""
 botToken_envVarName = "STORYTELLER_BOT_TOKEN"
 
-ignoredSymbols = ".,!?`%&()[]-+=*|\/<>¬~'\"_\n:;"
+ignoredSymbols = ('.', ',', '!', '?', '`', '%', '&', '(', ')', '[', ']', '-', '+', '=', '*', '|', '\\', '/', '<', '>', '¬', \
+                    '~', "'", '"', '_', '\n', ':', ';', '...')
 
 pollMenuResultsBarLength = 10
 
