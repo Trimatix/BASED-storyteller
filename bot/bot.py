@@ -492,7 +492,12 @@ async def on_message(message: discord.Message):
                         return
                     if callingGuild.emojiOnlyErrSent:
                         callingGuild.emojiOnlyErrSent = False
-                callingGuild.story += message.content
+                if len(msgSplit) > 1 and msgSplit[0] == "-":
+                    callingGuild.story += " " + message.content
+                elif len(msgSplit) > 1 and msgSplit[0] in cfg.ignoredSymbols:
+                    callingGuild.story += message.content
+                else:
+                    callingGuild.story += " " + message.content
                 callingGuild.lastAuthorID = message.author.id
 
 
