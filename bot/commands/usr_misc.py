@@ -341,10 +341,10 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
         userTimeGuess = datetime.now(tz=timezone(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset]))
         await timezonesMsg.edit(content=f"Timezone recognised as UTC{lib.timeUtil.formatTDHM(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset])}.\nIf the time is not currently <t:{int(userTimeGuess.timestamp())}:t>, then please correct your timezone setting with the `settz` command.")
 
-    if not lib.timeUtil.stringIsTime(message.content):
-        await message.reply(f"{message.content} is not a time!")
+    if not lib.timeUtil.stringIsTime(args):
+        await message.reply(f"{args} is not a time!")
         return
-    t = lib.timeUtil.parseTime(message.content)
+    t = lib.timeUtil.parseTime(args)
     t.tzinfo = timezone(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset])
     await message.reply(f"<t:{int(t.timestamp())}:t>", mention_author=False)
     
