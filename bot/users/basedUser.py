@@ -13,13 +13,13 @@ class BasedUser(serializable.Serializable):
     :vartype id: int
     """
 
-    def __init__(self, id: int, timeOffset: Optional[str] = None):
+    def __init__(self, id: int, helpMenuOwned: bool = False, pollOwned: bool = False, timeOffset: Optional[str] = None):
         """
         :param int id: The user's unique ID. The same as their unique discord ID.
         """
         self.id = id
-        self.helpMenuOwned = False
-        self.pollOwned = False
+        self.helpMenuOwned = helpMenuOwned
+        self.pollOwned = pollOwned
         self.timeOffset = timeOffset
 
 
