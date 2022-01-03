@@ -1,5 +1,6 @@
 # Typing imports
 from __future__ import annotations
+from typing import Optional
 
 from ..baseClasses import serializable
 
@@ -12,13 +13,14 @@ class BasedUser(serializable.Serializable):
     :vartype id: int
     """
 
-    def __init__(self, id: int):
+    def __init__(self, id: int, timeOffset: Optional[str] = None):
         """
         :param int id: The user's unique ID. The same as their unique discord ID.
         """
         self.id = id
         self.helpMenuOwned = False
         self.pollOwned = False
+        self.timeOffset = timeOffset
 
 
     def resetUser(self):
@@ -33,7 +35,11 @@ class BasedUser(serializable.Serializable):
         :return: A dictionary containing all information needed to recreate this user
         :rtype: dict
         """
-        return {}
+        data = {}
+        if self.helpMenuOwned: data["helpMenuOwned"] = self.helpMenuOwned
+        if self.pollOwned: data["pollOwned"] = self.pollOwned
+        if self.timeOffset is not None: data["timeOffset"] = self.timeOffset
+        return data
 
 
     def __str__(self) -> str:
@@ -60,4 +66,7 @@ class BasedUser(serializable.Serializable):
             raise NameError("Required kwarg not given: id")
         userID = kwargs["id"]
 
-        return BasedUser(userID)
+        return BasedUser(userID,
+                        userDict.get("helpMenuOwned", False),
+                        userDict.get("pollOwned", False),
+                        userDict.get("timeOffset", None))

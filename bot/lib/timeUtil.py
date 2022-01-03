@@ -1,5 +1,6 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from typing import Dict
+import re
 
 
 def td_format_noYM(td_object: timedelta) -> str:
@@ -46,3 +47,86 @@ def timeDeltaFromDict(timeDict: dict) -> timedelta:
                      seconds=timeDict["seconds"] if "seconds" in timeDict else 0,
                      microseconds=timeDict["microseconds"] if "microseconds" in timeDict else 0,
                      milliseconds=timeDict["milliseconds"] if "milliseconds" in timeDict else 0)
+
+
+UTC_OFFSETS = { "Y": timedelta(hours=-12),
+                "X": timedelta(hours=-11),
+                "W": timedelta(hours=-10),
+                "V+": timedelta(hours=-9, minutes=-30),
+                "V": timedelta(hours=-9),
+                "U": timedelta(hours=-8),
+                "T": timedelta(hours=-7),
+                "S": timedelta(hours=-6),
+                "R": timedelta(hours=-5),
+                "Q": timedelta(hours=-4),
+                "P+": timedelta(hours=-3, minutes=-30),
+                "P": timedelta(hours=-3),
+                "O": timedelta(hours=-2),
+                "N": timedelta(hours=-1),
+                "Z": timedelta(hours=0),
+                "A": timedelta(hours=1),
+                "B": timedelta(hours=2),
+                "C": timedelta(hours=3),
+                "C+": timedelta(hours=3, minutes=30),
+                "D": timedelta(hours=4),
+                "D+": timedelta(hours=4, minutes=30),
+                "E": timedelta(hours=5),
+                "E+": timedelta(hours=5, minutes=30),
+                "E*": timedelta(hours=5, minutes=45),
+                "F": timedelta(hours=6),
+                "F+": timedelta(hours=3, minutes=30),
+                "G": timedelta(hours=7),
+                "H": timedelta(hours=8),
+                "H+": timedelta(hours=8, minutes=45),
+                "I": timedelta(hours=9),
+                "I+": timedelta(hours=9, minutes=30),
+                "K": timedelta(hours=10),
+                "K+": timedelta(hours=10, minutes=30),
+                "L": timedelta(hours=11),
+                "M": timedelta(hours=12),
+                "M*": timedelta(hours=12, minutes=45),
+                "M+": timedelta(hours=13),
+                "M++": timedelta(hours=14)}
+
+anytime = re.compile("\\d\\d?:\\d\\d( ?(am|pm))?$")
+twelveHour = re.compile("\\d\\d?:\\d\\d ?(am|pm)$")
+twentyFourHour = re.compile("\\d\\d?:\\d\\d$")
+
+def stringIsTime(s) -> bool:
+    return bool(anytime.match(s.lower()))
+
+def parseTime(s) -> datetime:
+    if not stringIsTime(s):
+        raise ValueError("Not a valid time")
+    m = twelveHour.match(s.lower())
+    is24 = False
+    if m is None:
+        m = twentyFourHour.match(s.lower())
+        is24 = True
+    if m is None:
+        raise ValueError("No match")
+    
+    colonIndex = s.index(":")
+    hours = int(s[0:colonIndex])
+    minutes = int(s[colonIndex+1:colonIndex+2])
+
+    if is24:
+        dayHalf = s[-2:].lower()
+        if dayHalf == "pm":
+            hours += 12
+
+    return datetime(hours=hours, minutes=minutes)
+
+
+def formatTDHM(td: timedelta) -> str:
+    prefix = "+" if td.seconds >= 0 else "-"
+    currentSeconds = td.seconds
+    hours = 0
+    minutes = 0
+    if currentSeconds > 60 * 60:
+        hours = divmod(currentSeconds, 60 * 60)
+        currentSeconds -= hours * 60 * 60
+    if currentSeconds > 60:
+        minutes = divmod(currentSeconds, 60)
+
+    return prefix + str(hours).rjust(2, "0") + ":" + str(minutes).rjust(2, "0")
