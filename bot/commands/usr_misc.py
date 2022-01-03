@@ -330,7 +330,7 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
         now = datetime.utcnow()
         toleranceMin = timedelta(minutes=-5)
         toleranceMax = timedelta(minutes=5)
-        await message.reply("\n".join(now + tzOffset for tzOffset in lib.timeUtil.UTC_OFFSETS.values()))
+        await message.reply("\n".join(str(now + tzOffset) for tzOffset in lib.timeUtil.UTC_OFFSETS.values()))
         for tzID, tzOffset in lib.timeUtil.UTC_OFFSETS.items():
             if toleranceMin <= userTime - (now + tzOffset) <= toleranceMax:
                 bUser.timeOffset = tzID
