@@ -115,7 +115,8 @@ def parseTime(s) -> datetime:
         if dayHalf == "pm":
             hours += 12
 
-    return datetime(hours=hours, minutes=minutes)
+    now = datetime.utcnow()
+    return datetime(year=now.year, month=now.month, day=now.day, hour=hours, minute=minutes)
 
 
 def formatTDHM(td: timedelta) -> str:
