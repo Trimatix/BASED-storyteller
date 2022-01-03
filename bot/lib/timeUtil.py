@@ -108,7 +108,7 @@ def parseTime(s) -> datetime:
     
     colonIndex = s.index(":")
     hours = int(s[0:colonIndex])
-    minutes = int(s[colonIndex+1:colonIndex+2])
+    minutes = int(s[colonIndex+1:colonIndex+3])
 
     if is24:
         dayHalf = s[-2:].lower()
