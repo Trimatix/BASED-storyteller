@@ -131,8 +131,8 @@ def parseTime(s) -> datetime:
 
 
 def formatTDHM(td: timedelta) -> str:
-    prefix = "+" if td.seconds >= 0 else "-"
-    currentSeconds = td.seconds
+    currentSeconds = int(td.total_seconds())
+    prefix = "+" if currentSeconds >= 0 else "-"
     hours = 0
     minutes = 0
     if currentSeconds >= 60 * 60:
