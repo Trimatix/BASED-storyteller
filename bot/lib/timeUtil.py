@@ -125,9 +125,8 @@ def formatTDHM(td: timedelta) -> str:
     hours = 0
     minutes = 0
     if currentSeconds > 60 * 60:
-        hours = divmod(currentSeconds, 60 * 60)
-        currentSeconds -= hours * 60 * 60
+        hours, currentSeconds = divmod(currentSeconds, 60 * 60)
     if currentSeconds > 60:
-        minutes = divmod(currentSeconds, 60)
+        minutes, currentSeconds = divmod(currentSeconds, 60)
 
     return prefix + str(hours).rjust(2, "0") + ":" + str(minutes).rjust(2, "0")
