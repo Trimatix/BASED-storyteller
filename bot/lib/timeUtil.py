@@ -121,7 +121,7 @@ def parseTime(s) -> datetime:
 
     if not is24:
         dayHalf = s[-2:].lower()
-        if dayHalf == "pm":
+        if dayHalf == "pm" and hours != 0:
             hours += 12
 
     now = datetime.utcnow()
