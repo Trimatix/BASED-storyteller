@@ -310,8 +310,10 @@ async def cmd_set_timezone(message, args, isDM):
         if toleranceMin <= userTime - (now + tzOffset) <= toleranceMax:
             bUser.timeOffset = tzID
             timeFound = True
+            break
     if not timeFound:
         await timezonesMsg.edit(content="Sorry, your time does not match any of my known timezones, please try again. Did you type it right?")
+        return
     userTimeGuess = datetime.utcnow() + lib.timeUtil.UTC_OFFSETS[bUser.timeOffset]
     await timezonesMsg.edit(content=f"Timezone recognised as UTC{lib.timeUtil.formatTDHM(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset])}.\nIf the time is not currently <t:{int(userTimeGuess.timestamp())}:t>, then please try this command again.")
 
@@ -343,6 +345,7 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
         for tzID, tzOffset in lib.timeUtil.UTC_OFFSETS.items():
             if toleranceMin <= userTime - (now + tzOffset) <= toleranceMax:
                 bUser.timeOffset = tzID
+                break
         if bUser.timeOffset is None:
             await timezonesMsg.edit(content="Sorry, your time does not match any of my known timezones, please try again. Did you type it right?")
             return
