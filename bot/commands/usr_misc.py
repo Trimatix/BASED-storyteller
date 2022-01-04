@@ -355,7 +355,7 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
     try:
         t = lib.timeUtil.parseTime(args)
     except ValueError:
-        await timezonesMsg.edit(f"{args} is not a time!")
+        await message.reply(f"{args} is not a time!")
         return
     t = datetime(year=t.year, month=t.month, day=t.day, hour=t.hour, minute=t.minute, second=t.second, microsecond=t.microsecond, tzinfo=timezone(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset]))
     await message.reply(f"<t:{int(t.timestamp())}:t> `<t:{int(t.timestamp())}:t>`", mention_author=False)
