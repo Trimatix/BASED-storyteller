@@ -346,7 +346,7 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
         return
     t = lib.timeUtil.parseTime(args)
     t = datetime(year=t.year, month=t.month, day=t.day, hour=t.hour, minute=t.minute, second=t.second, microsecond=t.microsecond, tzinfo=timezone(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset]))
-    await message.reply(f"<t:{int(t.timestamp())}:t>", mention_author=False)
+    await message.reply(f"<t:{int(t.timestamp())}:t> -> \\<t:{int(t.timestamp())}:t>", mention_author=False)
     
 
 botCommands.register("time", cmd_make_timestamp, 0, allowDM=True, signatureStr="**time [time]**", shortHelp="Create a discord timestamp. Time can be 12 hour (e.g 1:30 pm) or 24 hour (e.g 13:30). You can change your timezone with the `settz` command.") 
