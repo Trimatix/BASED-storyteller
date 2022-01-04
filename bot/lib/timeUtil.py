@@ -110,6 +110,15 @@ def parseTime(s) -> datetime:
     hours = int(s[0:colonIndex])
     minutes = int(s[colonIndex+1:colonIndex+3])
 
+    if minutes < 0 or minutes > 59:
+        raise ValueError("Not a valid time")
+    if is24:
+        if hours < 0 or hours > 23:
+            raise ValueError("Not a valid time")
+    else:
+        if hours < 0 or hours > 11:
+            raise ValueError("Not a valid time")
+
     if not is24:
         dayHalf = s[-2:].lower()
         if dayHalf == "pm":

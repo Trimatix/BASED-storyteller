@@ -297,7 +297,11 @@ async def cmd_set_timezone(message, args, isDM):
     def check(m: discord.Message) -> bool:
         return m.channel == message.channel and m.author == message.author and lib.timeUtil.stringIsTime(m.content)
     userTimeMsg: discord.Message = await cast(discord.Client, botState.client).wait_for("message", timeout=120, check=check)
-    userTime = lib.timeUtil.parseTime(userTimeMsg.content)
+    try:
+        userTime = lib.timeUtil.parseTime(userTimeMsg.content)
+    except ValueError:
+        await timezonesMsg.edit(userTimeMsg.content + " is not a time! Please try this command again.")
+        return
     now = datetime.utcnow()
     toleranceMin = timedelta(minutes=-5)
     toleranceMax = timedelta(minutes=5)
@@ -328,7 +332,11 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
         def check(m: discord.Message) -> bool:
             return m.channel == message.channel and m.author == message.author and lib.timeUtil.stringIsTime(m.content)
         userTimeMsg: discord.Message = await cast(discord.Client, botState.client).wait_for("message", timeout=120, check=check)
-        userTime = lib.timeUtil.parseTime(userTimeMsg.content)
+        try:
+            userTime = lib.timeUtil.parseTime(userTimeMsg.content)
+        except ValueError:
+            await timezonesMsg.edit(userTimeMsg.content + " is not a time! Please try this command again.")
+            return
         now = datetime.utcnow()
         toleranceMin = timedelta(minutes=-5)
         toleranceMax = timedelta(minutes=5)
@@ -344,7 +352,11 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
     if not lib.timeUtil.stringIsTime(args):
         await message.reply(f"{args} is not a time!")
         return
-    t = lib.timeUtil.parseTime(args)
+    try:
+        t = lib.timeUtil.parseTime(args)
+    except ValueError:
+        await timezonesMsg.edit(f"{args} is not a time!")
+        return
     t = datetime(year=t.year, month=t.month, day=t.day, hour=t.hour, minute=t.minute, second=t.second, microsecond=t.microsecond, tzinfo=timezone(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset]))
     await message.reply(f"<t:{int(t.timestamp())}:t> `<t:{int(t.timestamp())}:t>`", mention_author=False)
     
