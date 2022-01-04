@@ -292,7 +292,7 @@ botCommands.register("random", cmd_random, 0, allowDM=False, signatureStr="**ran
 
 
 async def cmd_set_timezone(message, args, isDM):
-    bUser: basedUser.BasedUser = botState.usersDB.getUser(message.author.id)
+    bUser: basedUser.BasedUser = botState.usersDB.getOrAddID(message.author.id)
     timezonesMsg = await message.reply("What's the time right now?")
     def check(m: discord.Message) -> bool:
         return m.channel == message.channel and m.author == message.author and lib.timeUtil.stringIsTime(m.content)
@@ -322,7 +322,7 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
     :param str args: ignored
     :param bool isDM: Whether or not the command is being called from a DM channel
     """
-    bUser: basedUser.BasedUser = botState.usersDB.getUser(message.author.id)
+    bUser: basedUser.BasedUser = botState.usersDB.getOrAddID(message.author.id)
     if bUser.timeOffset is None:
         timezonesMsg = await message.reply("I need to know what timezone you're in.\nYou will only need to do this once, I will remember your answer.\n\nWhat's the time right now?")
         def check(m: discord.Message) -> bool:
