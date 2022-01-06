@@ -88,9 +88,9 @@ UTC_OFFSETS = { "Y": timedelta(hours=-12),
                 "M+": timedelta(hours=13),
                 "M++": timedelta(hours=14)}
 
-anytime = re.compile("\\d\\d?:\\d\\d( ?(am|pm))?$")
-twelveHour = re.compile("\\d\\d?:\\d\\d ?(am|pm)$")
-twentyFourHour = re.compile("\\d\\d?:\\d\\d$")
+anytime = re.compile("^\\d\\d?:\\d\\d( ?(am|pm))?$")
+twelveHour = re.compile("^\\d\\d?:\\d\\d ?(am|pm)$")
+twentyFourHour = re.compile("^\\d\\d?:\\d\\d$")
 
 def stringIsTime(s) -> bool:
     return bool(anytime.match(s.lower()))
