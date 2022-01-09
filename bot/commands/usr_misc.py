@@ -397,3 +397,59 @@ async def cmd_get_current_story(message: discord.Message, args: str, isDM: bool)
         await message.reply("The story hasn't been started yet, be the first to contribute!", mention_author=False)
 
 botCommands.register("story", cmd_get_current_story, 0, signatureStr="**story**", shortHelp="Show the story so far.") 
+
+
+async def cmd_newline(message: discord.Message, args: str, isDM: bool):
+    """Add a word to the story, with a new line before it.
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: optionally a word to add to the story
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    callingGuild = botState.guildsDB.getGuild(message.guild.id)
+    if callingGuild.storyChannelID == -1:
+        await message.channel.send(":x: This server does not have a story channel!")
+    elif callingGuild.storyChannelID != message.channel.id:
+        await message.channel.send(":x: This command can only be used from the story channel!")
+    elif callingGuild.lastAuthorID == message.author.id:
+        await message.channel.send(":boom: **Story broken, " + message.author.mention + "!** It wasn't your turn!")
+        await message.channel.send(callingGuild.story)
+        callingGuild.story = ""
+        callingGuild.lastAuthorID = -1
+    else:
+        args = "\n" + args
+        msgSplit = args.split(" ")
+        if len(msgSplit) > 2:
+            await message.channel.send(f":boom: **Story broken, {message.author.mention}!** You only add one {'emoji' if callingGuild.emojiOnly else 'word'} at a time!")
+            if callingGuild.story:
+                await message.channel.send(callingGuild.story)
+            callingGuild.story = ""
+            callingGuild.lastAuthorID = -1
+            if callingGuild.emojiOnlyErrSent:
+                callingGuild.emojiOnlyErrSent = False
+        elif len(callingGuild.story) + len(args) > 2000:
+            await message.channel.send(":boom: **Max story length exceeded!**")
+            await message.channel.send(callingGuild.story)
+            callingGuild.story = ""
+            callingGuild.lastAuthorID = -1
+        else:
+            if callingGuild.emojiOnly:
+                if not (lib.emojis.strIsCustomEmoji(args) or lib.emojis.strIsUnicodeEmoji(args)):
+                    await message.delete()
+                    if not callingGuild.emojiOnlyErrSent:
+                        await message.channel.send(message.author.mention + " emoji only mode is enabled! You can only contribute a single emoji.")
+                        callingGuild.emojiOnlyErrSent = True
+                    return
+                try:
+                    lib.emojis.BasedEmoji.fromStr(args, rejectInvalid=True)
+                except (lib.exceptions.UnrecognisedCustomEmoji, TypeError):
+                    await message.delete()
+                    await message.channel.send(message.author.mention + " please only use standard emojis or emojis from this server!")
+                    return
+                if callingGuild.emojiOnlyErrSent:
+                    callingGuild.emojiOnlyErrSent = False
+            callingGuild.story += " " + args
+            callingGuild.lastAuthorID = message.author.id
+    
+
+botCommands.register("nl", cmd_newline, 0, allowDM=False, aliases=["n", "newline", "line", "return"], signatureStr="**nl <word/emoji>**", shortHelp="Add a new line to the story, followed by your word if one is given. Your message must be strictly one word/emoji - ignored symbols do not apply, e.g ending off a quote or brackets.") 
