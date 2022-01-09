@@ -452,4 +452,4 @@ async def cmd_newline(message: discord.Message, args: str, isDM: bool):
             callingGuild.lastAuthorID = message.author.id
     
 
-botCommands.register("nl", cmd_newline, 0, allowDM=False, aliases=["n", "newline", "line", "return"], signatureStr="**nl <word/emoji>**", shortHelp="Add a new line to the story, followed by your word if one is given. Your message must be strictly one word/emoji - ignored symbols do not apply, e.g ending off a quote or brackets.") 
+botCommands.register("nl", cmd_newline, 0, allowDM=False, aliases=["n", "newline", "new-line", "line", "return"], signatureStr="**nl <word/emoji>**", shortHelp="Add a new line to the story, followed by your word if one is given. Your message must be strictly one word/emoji - ignored symbols do not apply, e.g ending off a quote or brackets.") 
