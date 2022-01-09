@@ -321,7 +321,7 @@ async def cmd_set_timezone(message, args, isDM):
         await timezonesMsg.edit(content="Sorry, your time does not match any of my known timezones, please try again. Did you type it right?")
         return
     userTimeGuess = datetime.utcnow() + lib.timeUtil.UTC_OFFSETS[bUser.timeOffset]
-    await timezonesMsg.edit(content=f"Timezone recognised as UTC{lib.timeUtil.formatTDHM(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset])}.\nIf the time is not currently <t:{int(userTimeGuess.timestamp())}:t>, then please try this command again.")
+    await timezonesMsg.edit(content=f"Timezone recognised as UTC{lib.timeUtil.formatTDHM(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset])}.\nIf the time is not currently {userTimeGuess.strftime('%H:%M')}, then please try this command again.")
 
 botCommands.register("settz", cmd_set_timezone, 0, allowDM=True, signatureStr="**settz**", shortHelp="Set the timezone to use with the `time` command.") 
 
@@ -362,7 +362,7 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
             await timezonesMsg.edit(content="Sorry, your time does not match any of my known timezones, please try again. Did you type it right?")
             return
         userTimeGuess = datetime.now(tz=timezone(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset]))
-        await timezonesMsg.edit(content=f"Timezone recognised as UTC{lib.timeUtil.formatTDHM(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset])}.\nIf the time is not currently <t:{int(userTimeGuess.timestamp())}:t>, then please correct your timezone setting with the `settz` command.")
+        await timezonesMsg.edit(content=f"Timezone recognised as UTC{lib.timeUtil.formatTDHM(lib.timeUtil.UTC_OFFSETS[bUser.timeOffset])}.\nIf the time is not currently {userTimeGuess.strftime('%H:%M')}, then please correct your timezone setting with the `settz` command.")
 
     if not lib.timeUtil.stringIsTime(args):
         await message.reply(f"{args} is not a time!")
