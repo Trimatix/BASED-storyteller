@@ -377,3 +377,23 @@ async def cmd_make_timestamp(message: discord.Message, args: str, isDM: bool):
     
 
 botCommands.register("time", cmd_make_timestamp, 0, allowDM=True, signatureStr="**time [time]**", shortHelp="Create a discord timestamp. Time can be 12 hour (e.g 1:30 pm) or 24 hour (e.g 13:30). You can change your timezone with the `settz` command.") 
+
+
+async def cmd_get_current_story(message: discord.Message, args: str, isDM: bool):
+    """Get the current story.
+
+    :param discord.Message message: the discord message calling the command
+    :param str args: ignored
+    :param bool isDM: Whether or not the command is being called from a DM channel
+    """
+    callingGuild = botState.guildsDB.getGuild(message.guild.id)
+    if callingGuild.storyChannelID == -1:
+        await message.channel.send(":x: This server does not have a story channel!")
+    elif callingGuild.storyChannelID != message.channel.id:
+        await message.channel.send(":x: This command can only be used from the story channel!")
+    elif callingGuild.story:
+        await message.reply(callingGuild.story, mention_author=False)
+    else:
+        await message.reply("The story hasn't been started yet, be the first to contribute!", mention_author=False)
+
+botCommands.register("story", cmd_get_current_story, 0, signatureStr="**story**", shortHelp="Show the story so far.") 
