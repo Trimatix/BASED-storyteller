@@ -389,8 +389,8 @@ async def on_message(message: discord.Message):
 
     :param discord.Message message: The message that triggered this command on sending
     """
-    # ignore messages sent by bots
-    if message.author.bot:
+    # ignore messages sent by bots and system messages e.g message pins
+    if message.author.bot or message.type != discord.MessageType.default:
         return
     # Check whether the command was requested in DMs
     try:
